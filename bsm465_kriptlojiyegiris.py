@@ -1,7 +1,11 @@
+import time
+from colorama import Fore, Style
+
 # Binary formatındaki metni hexadecimal formata dönüştüren fonksiyon
 def binary_to_hex(binary_text):
     hex_text = hex(int(binary_text, 2))[2:]
     return hex_text
+
 # string olarak girilen girdilerimizin binary formatına dönüştüren fonksiyon
 def string_to_binary(text):
     binary_text = ''.join(format(ord(char), '08b') for char in text)
@@ -105,7 +109,7 @@ def generate_key(key_):
     permuted_key = key_initial_permutation(key)
     # Karışmış 112 biti iki kısma ayır
     left, right = permuted_key[:56], permuted_key[56:]
-
+    ##print(left+right)
     # 16 tur boyunca kaydırma işlemlerini uygula ve döngü anahtarlarını üret
     for round_num in range(1, 17):
         # 1. ve 2. 9. 16. turda 2 bit sola, diğer turlarda 4 bit sola kaydır
@@ -203,6 +207,8 @@ plaintext = input("Sifrelenecek metni girin(lutfen turkce karakterler girmeyiniz
 # Alınan metni şifrelemek için kullanılıcak anahatarı kullanıcıdan alıyoruz
 _key = input("Anahtar metni girin(16 adet karakter girilmelidir, lutfen turkce karakterler girmeyin!): ")
 
+start_encrypt_time=time.time()
+
 # Alınan anahtarı binary formatına çeviriyoruz
 _key = string_to_binary(_key)
 
@@ -218,10 +224,14 @@ binary_text = string_to_binary(padded_text)
 # Metni 128 bitlik bloklara ayırıyoruz
 blocks = split_blocks(binary_text, 128)
 
+
 all_ciphertext = ""
 for i, block in enumerate(blocks):
     ciphertext_block, dec_keys = encrypt_block(block,_key)  # Şifreleme işlemi gerçekleştiriliyor
     all_ciphertext += ciphertext_block
+end_encrypt_time=time.time()
+
+start_decrypt_time=time.time()
 
 # Şifre metnini 128 bitlik bloklara ayırıyoruz
 ciphertext_blocks = split_blocks(all_ciphertext, 128)
@@ -230,15 +240,17 @@ all_plaintext = ""
 for i, block in enumerate(ciphertext_blocks):
     plaintext_block = decrypt_block(block,dec_keys[0])  # Şifre çözme işlemi gerçekleştiriliyor
     all_plaintext += plaintext_block
-
+end_decrypt_time=time.time()
 
 # Şifrelenmiş metni ikilikten onaltılık sistemine çevir, ekran yazdır
 ciphertext_hex = binary_to_hex(all_ciphertext)
-print(f"Şifrelenmiş Metin {ciphertext_hex}")
+print(f"\n{Fore.GREEN}Şifrelenmiş Metin: {ciphertext_hex}{Style.RESET_ALL}")
+print(f"Şifreleme işlemi {end_encrypt_time-start_encrypt_time} saniyede gerçekleşti.\n")
 
 # eklenen bitler çıkarılıyor.
 unpadding=all_plaintext[:original_text_lenght]
 
 # Şifresi çözülmüş metni string formatında ekrana yazdır
 plaintext_string = binary_to_string(unpadding)
-print(f"Şifresi çözümlenmiş metin: {plaintext_string}")
+print(f"{Fore.BLUE}Şifresi çözümlenmiş metin: {plaintext_string}{Style.RESET_ALL}")
+print(f"Şifre çözme işlemi {end_decrypt_time-start_decrypt_time} saniyede gerçekleşti.")
