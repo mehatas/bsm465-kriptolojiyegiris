@@ -202,10 +202,10 @@ def decrypt_block(block, key):
     return decrypt_text
 
 # Kullanıcıdan şifrelemek için metin alıyoruz
-plaintext = input("Sifrelenecek metni girin(lutfen turkce karakterler girmeyiniz): ")
+plaintext = input(f"Sifrelenecek metni girin(lutfen turkce karakterler girmeyiniz):{Fore.BLUE} ")
 
 # Alınan metni şifrelemek için kullanılıcak anahatarı kullanıcıdan alıyoruz
-_key = input("Anahtar metni girin(16 adet karakter girilmelidir, lutfen turkce karakterler girmeyin!): ")
+_key = input(f"{Style.RESET_ALL}Anahtar metni girin(16 adet karakter girilmelidir, lutfen turkce karakterler girmeyin!):{Fore.RED} ")
 
 start_encrypt_time=time.time()
 
@@ -244,7 +244,7 @@ end_decrypt_time=time.time()
 
 # Şifrelenmiş metni ikilikten onaltılık sistemine çevir, ekran yazdır
 ciphertext_hex = binary_to_hex(all_ciphertext)
-print(f"\n{Fore.GREEN}Şifrelenmiş Metin: {ciphertext_hex}{Style.RESET_ALL}")
+print(f"\n{Style.RESET_ALL}{Fore.GREEN}Şifrelenmiş Metin: {ciphertext_hex}{Style.RESET_ALL}")
 print(f"Şifreleme işlemi {end_encrypt_time-start_encrypt_time} saniyede gerçekleşti.\n")
 
 # eklenen bitler çıkarılıyor.
